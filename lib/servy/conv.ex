@@ -1,12 +1,10 @@
 defmodule Servy.Conv do
-  defstruct [ 
-    method: "", 
-    path: "", 
-    resp_body: "",
-    headers: %{},
-    status: nil,
-    params: %{}
-  ]
+  defstruct method: "",
+            path: "",
+            resp_body: "",
+            headers: %{},
+            status: nil,
+            params: %{}
 
   def full_status(conv) do
     "#{conv.status} #{status_reason(conv.status)}"
@@ -21,6 +19,5 @@ defmodule Servy.Conv do
       404 => "Not Found",
       500 => "Internal"
     }[code]
-
   end
 end

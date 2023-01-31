@@ -27,4 +27,9 @@ alias Servy.Wildthings
     %{ conv | status: 201, resp_body: "Created #{name}"}
   end
 
+  def delete(conv, %{"id" => id}) do
+    bear = Wildthings.get_bear(id)
+    %{ conv | status: 200, resp_body: "Bear #{bear.name} Baleeted"}
+  end
+
 end

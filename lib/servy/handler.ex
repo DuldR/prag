@@ -123,7 +123,6 @@ Accept: */*
 response = Servy.Handler.handle(request)
 IO.puts(response)
 
-
 request = """
 GET /bigfoot HTTP/1.1
 Host: example.com

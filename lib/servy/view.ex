@@ -9,5 +9,4 @@ defmodule Servy.View do
 
     %{conv | status: 200, resp_body: content}
   end
-
 end

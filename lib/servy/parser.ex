@@ -1,5 +1,4 @@
 defmodule Servy.Parser do
-
   alias Servy.Conv
 
   def parse(request) do
@@ -13,12 +12,12 @@ defmodule Servy.Parser do
 
     params = parse_params(headers["Content-Type"], params_string)
 
-    %Conv{ 
-       method: method, 
-       path: path,
-       params: params,
-       headers: headers
-     }
+    %Conv{
+      method: method,
+      path: path,
+      params: params,
+      headers: headers
+    }
   end
 
   def parse_headers([head | tail], headers) do
@@ -41,9 +40,12 @@ defmodule Servy.Parser do
       %{}
   """
   def parse_params("application/x-www-form-urlencoded", params_string) do
-    params_string |> String.trim |> URI.decode_query
+    params_string |> String.trim() |> URI.decode_query()
+  end
+
+  def parse_params("application/json", params_string) do
+    params_string |> Poison.Parser.parse!(%{})
   end
 
   def parse_params(_, _), do: %{}
-
 end

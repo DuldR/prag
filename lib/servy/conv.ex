@@ -1,10 +1,10 @@
 defmodule Servy.Conv do
-  defstruct method: "",
-            path: "",
-            resp_body: "",
+  defstruct method: "", 
+            path: "", 
+            params: %{},
             headers: %{},
-            status: nil,
-            params: %{}
+            resp_body: "", 
+            status: nil
 
   def full_status(conv) do
     "#{conv.status} #{status_reason(conv.status)}"
@@ -14,10 +14,10 @@ defmodule Servy.Conv do
     %{
       200 => "OK",
       201 => "Created",
-      401 => "Unauth",
+      401 => "Unauthorized",
       403 => "Forbidden",
       404 => "Not Found",
-      500 => "Internal"
+      500 => "Internal Server Error"
     }[code]
   end
 end

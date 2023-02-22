@@ -1,4 +1,5 @@
 defmodule Servy.Handler do
+
   @moduledoc "Handles HTTP requests."
 
   alias Servy.Conv
@@ -11,33 +12,28 @@ defmodule Servy.Handler do
 
   @doc "Transforms the request into a response."
   def handle(request) do
-    request
+    request 
     |> parse
     |> rewrite_path
-    |> log
-    |> route
+    |> log 
+    |> route 
     |> track
-    |> Conv.put_content_length()
     |> format_response
   end
 
-  def route(%Conv{method: "GET", path: "/wildthings"} = conv) do
-    %{conv | status: 200, resp_body: "Bears, Lions, Tigers"}
+  def route(%Conv{ method: "GET", path: "/wildthings" } = conv) do
+    %{ conv | status: 200, resp_body: "Bears, Lions, Tigers" }          
   end
 
-  def route(%Conv{method: "GET", path: "/bears"} = conv) do
-    BearController.index(conv)
-  end
-
-  def route(%Conv{method: "GET", path: "/api/bears"} = conv) do
+  def route(%Conv{ method: "GET", path: "/api/bears" } = conv) do
     Servy.Api.BearController.index(conv)
   end
 
-  def route(%Conv{method: "POST", path: "/api/bears"} = conv) do
-    Servy.Api.BearController.create(conv)
+  def route(%Conv{ method: "GET", path: "/bears" } = conv) do
+    BearController.index(conv)
   end
 
-  def route(%Conv{method: "GET", path: "/bears/" <> id} = conv) do
+  def route(%Conv{ method: "GET", path: "/bears/" <> id } = conv) do
     params = Map.put(conv.params, "id", id)
     BearController.show(conv, params)
   end
@@ -47,43 +43,37 @@ defmodule Servy.Handler do
   end
 
   def route(%Conv{method: "GET", path: "/about"} = conv) do
-    @pages_path
-    |> Path.join("about.html")
-    |> File.read()
-    |> handle_file(conv)
+      @pages_path
+      |> Path.join("about.html")
+      |> File.read
+      |> handle_file(conv)
   end
 
-  def route(%Conv{path: path} = conv) do
-    %{conv | status: 404, resp_body: "No #{path} here!"}
+  def route(%Conv{ path: path } = conv) do
+    %{ conv | status: 404, resp_body: "No #{path} here!"}
   end
 
   def handle_file({:ok, content}, conv) do
-    %{conv | status: 200, resp_body: content}
+    %{ conv | status: 200, resp_body: content }
   end
 
   def handle_file({:error, :enoent}, conv) do
-    %{conv | status: 404, resp_body: "File not found!"}
+    %{ conv | status: 404, resp_body: "File not found!" }
   end
 
   def handle_file({:error, reason}, conv) do
-    %{conv | status: 500, resp_body: "File error: #{reason}"}
-  end
-
-  def format_headers(conv) do
-    Enum.map(conv.resp_headers, fn {k, v} ->
-      "#{k}: #{v}\r"
-    end)
-    |> Enum.sort()
-    |> Enum.reverse()
-    |> Enum.join("\n")
+    %{ conv | status: 500, resp_body: "File error: #{reason}" }
   end
 
   def format_response(%Conv{} = conv) do
     """
     HTTP/1.1 #{Conv.full_status(conv)}\r
-    #{format_headers(conv)}
+    Content-Type: #{conv.resp_content_type}\r
+    Content-Length: #{String.length(conv.resp_body)}\r
     \r
     #{conv.resp_body}
     """
   end
+
 end
+

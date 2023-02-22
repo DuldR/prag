@@ -1,24 +1,14 @@
 defmodule Servy.Conv do
-  defstruct method: "",
-            path: "",
+  defstruct method: "", 
+            path: "", 
             params: %{},
             headers: %{},
-            resp_body: "",
-            status: nil,
-            resp_headers: %{"Content-Type" => "text/html", "Content-Length" => String.length("")}
+            resp_content_type: "text/html",
+            resp_body: "", 
+            status: nil
 
   def full_status(conv) do
     "#{conv.status} #{status_reason(conv.status)}"
-  end
-
-  def put_resp_content(conv, content) do
-    new_headers = %{conv.resp_headers | "Content-Type" => content}
-    Map.put(conv, :resp_headers, new_headers)
-  end
-
-  def put_content_length(conv) do
-    new_headers = %{conv.resp_headers | "Content-Length" => String.length(conv.resp_body)}
-    Map.put(conv, :resp_headers, new_headers)
   end
 
   defp status_reason(code) do
